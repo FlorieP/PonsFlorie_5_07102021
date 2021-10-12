@@ -34,6 +34,14 @@ dataApi
       document.querySelector('#items img').src = imgUrl;
       document.querySelector('#items img').alt = imgAlt;
 
+      //Creation nouveau <a>
+      const newElt = document.createElement("a");
+      let elt2 = document.getElementById('items');
+      elt2.appendChild(newElt);
+      newElt.innerHTML = "<a href=\"./product.html?id=42\"><article><img src=\".../product01.jpg\" alt=\"Lorem ipsum dolor sit amet, Kanap name1\"><h3 class=\"productName\">Kanap name1</h3><p class=\"productDescription\">Dis enim malesuada risus sapien gravida nulla nisl arcu. Dis enim malesuada risus sapien gravida nulla nisl arcu.</p></article></a>";
+      /*while (var i = 0; i < products.length; i++) {
+    }*/
+
       //Catch du Try
     } catch (err) {
       alert("Il y a eu un problème avec l'opération try: " + err.message)
