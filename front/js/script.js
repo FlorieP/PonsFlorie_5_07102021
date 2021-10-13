@@ -21,13 +21,16 @@
           const newElt = document.createElement("a");
           let elt2 = document.getElementById('items');
           elt2.appendChild(newElt);
-          newElt.innerHTML = "<a href=\"./product.html?id=42\"><article><img src=\"\" alt=\"\"><h3 class=\"productName\">Kanap name1</h3><p class=\"productDescription\">Dis enim malesuada risus sapien gravida nulla nisl arcu. Dis enim malesuada risus sapien gravida nulla nisl arcu.</p></article></a>";
+          newElt.innerHTML = "<article><img src=\"\" alt=\"\"><h3 class=\"productName\">Kanap name1</h3><p class=\"productDescription\">Dis enim malesuada risus sapien gravida nulla nisl arcu. Dis enim malesuada risus sapien gravida nulla nisl arcu.</p></article>";
+
           //Retour Name
+          document.querySelector('#items a').href = "./product.html?id=42";
+
           const productName = products[i].name;
           console.log(productName);
           const affichage_Name = document.querySelector(".productName");
           affichage_Name.innerHTML = productName;
-  
+      
           //Retour Description
           const productDescription = products[i].description;
           console.log(productDescription);
@@ -41,7 +44,11 @@
           console.log(imgAlt);
           document.querySelector('#items img').src = imgUrl;
           document.querySelector('#items img').alt = imgAlt;
+
         }
+
+   
+
   
         //Catch du Try
       } catch (err) {
