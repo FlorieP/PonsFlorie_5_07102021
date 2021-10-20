@@ -24,7 +24,7 @@ dataApi
 
         //Création de la boucle
         for (var i = 0; i < products.length; i++) {
-          //Stockage des données dnas les variables
+          //Stockage des données dans les variables
           products.forEach((element, i) => {
             productId[i] = products[i]._id;
             productName[i] = products[i].name;

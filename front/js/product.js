@@ -13,6 +13,7 @@ PromesseProduit
     const Url_id = window.location.search;
     console.log(Url_id);
 
+    //Récupération de l'ID sans le ?
     const Urlrécup = new URLSearchParams(Url_id);
     const product_id = Urlrécup.get("id");
     console.log(product_id);
@@ -58,42 +59,75 @@ PromesseProduit
           affichage_Description.innerHTML = productDescription;
 
           //Retour des options couleurs
-
-          //Déclaration des variables
-          let colorStructure = [];
-          let colorsvalues = [];
-          //Création de la fonction d'affichage dynamique
-          function colorsDisplay(colors) {
-            colorsvalues = products.find((element) => element.colors);
-            console.log(colorsvalues);
+            //Déclaration des variables
+            let colors = [];
+            let optionStructure = [];
+            let nameOption = [];
+            //Importation des couleurs
+            colors = idProduit.colors;
+            console.log(colors);
             //sélection élément du DOM
-            const positionElement = document.querySelector('#colors');
+            var elt = document.querySelector("#colors");
             //Création de la boucle
             for (var i = 0; i < colors.length; i++) {
               //Stockage des données dans les variables
-              colorsvalues.forEach((element, i) => {
-                colorsProduct[i] = colorsvalues[i];
+              products.forEach((element, i) => {
+                nameOption[i] = colors[i]
               });
               //Affichage des objets dans la page
-              colorStructure += `
-              <option value="${colorsProduct[i]}">--SVP, choisissez une couleur --</option>
-  		      `;
+              optionStructure += `
+              <option value="${nameOption[i]}">${nameOption[i]}</option>
+              `;
               //Injection dans le HTML
-              positionElement.innerHTML = colorStructure;
+              elt.innerHTML = optionStructure;
             }
-            //Appel de la fonction d’affichage des produits 
-            colorsDisplay(colors);
-          }
+
+          //Mise en panier 
+            //Récupération des données du produits
+            //Sélection de la couleur
+            const color = document.querySelector("#colors");
+            console.log(color);
+            //Sélection de la quantité
+            const quantity = document.querySelector("#quantity")
+            
+            //Selection du bouton de commande
+            const btnPanier = document.querySelector("#addToCart");
+            console.log(btnPanier);
+            //Ecouter le bouton de commande
+            btnPanier.addEventListener("click", (event) => {
+              event.preventDefault();
+              
+              //Sélection du choix couleur et quantité de l'utilisateur
+              const choiceColor = color.value;
+              console.log(choiceColor);
+              const choiceQuantity = quantity.value;
+              console.log(choiceQuantity);
+
+              //Récupération des valeurs du produits
+              let valuesProduct = {
+                imgProduct: imgUrl, 
+                atlProduct: imgAlt,
+                nameProduct: productName, 
+                colorProduct: choiceColor, 
+                quantityProduct: choiceQuantity,
+                priceProduct: productPrice
+              }
+              console.log(valuesProduct);
+            });
+            
           //Catch du Try
         } catch (err) {
           alert("Il y a eu un problème avec l'opération try: " + err.message)
         }
       })
+
       //Catch du Fetch
       .catch((error) => {
         alert("Il y a eu un problème avec l'opération fetch: " + error.message)
       })
-      .catch((erreur) => {
-        console.log(erreur);
-      })
-  });
+
+  //catch de la promesse
+  .catch((erreur) => {
+    console.log(erreur);
+  })
+});
