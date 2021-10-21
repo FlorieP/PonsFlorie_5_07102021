@@ -121,7 +121,9 @@ PromesseProduit
                 console.log(productsStorage);
                 //Fonction d'ajout de produit dans le storage
                 const addProductStorage = () => {
+                  //Ajout du produit avec option choisi dans le tableau du storage
                   productsStorage.push(valuesProduct);
+                  //Transformation en JSON et envoie dans la clé du storage
                   localStorage.setItem("keyProduct", JSON.stringify(productsStorage));
                 };
                 //Création d'une condition pour vérifier s'il y a ou non des données dans le storage
