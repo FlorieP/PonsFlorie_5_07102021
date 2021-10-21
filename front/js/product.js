@@ -29,6 +29,7 @@ PromesseProduit
         console.table(products);
 
         try {
+          //Retrouver dans l'API le produit correspondant à l'ID
           const idProduit = products.find((element) => element._id === product_id);
           console.log(idProduit)
 
@@ -82,7 +83,7 @@ PromesseProduit
               elt.innerHTML = optionStructure;
             }
 
-          //Mise en panier 
+          //Création de l'évènement mise en panier
             //Récupération des données du produits
             //Sélection de la couleur
             const color = document.querySelector("#colors");
@@ -113,8 +114,28 @@ PromesseProduit
                 priceProduct: productPrice
               }
               console.log(valuesProduct);
+
+              //Mise en LocalStorage de l'évènement
+                //Déclaration variable de stockage des valeurs du storage
+                let productsStorage = JSON.parse(localStorage.getItem("keyProduct")); //conversion des données du local de JSON en JS
+                console.log(productsStorage);
+                //Fonction d'ajout de produit dans le storage
+                const addProductStorage = () => {
+                  productsStorage.push(valuesProduct);
+                  localStorage.setItem("keyProduct", JSON.stringify(productsStorage));
+                };
+                //Création d'une condition pour vérifier s'il y a ou non des données dans le storage
+                if(productsStorage){
+                  addProductStorage(); 
+                  console.log(productsStorage);
+                } else {
+                  productsStorage = []; 
+                  addProductStorage();
+                  console.log(productsStorage);
+                }
             });
-            
+
+          
           //Catch du Try
         } catch (err) {
           alert("Il y a eu un problème avec l'opération try: " + err.message)
