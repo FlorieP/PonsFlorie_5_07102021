@@ -1,8 +1,10 @@
+//Stockage url API
 let api = 'http://localhost:3000/api/products';
 
+//Appel fonction loadApi
 loadData(api);
 
-
+//Création fonction appel API
 function loadData(url) {
   //Récupération des données de l'API
   fetch(url)
@@ -12,7 +14,7 @@ function loadData(url) {
 
       try {
         //Appel de la fonction d’affichage des produits 
-        productDisplay(listProducts);
+        productsDisplay(listProducts);
 
         //Catch du Try
       } catch (err) {
@@ -27,7 +29,7 @@ function loadData(url) {
 }
 
 //Création de la fonction d'affichage dynamique
-function productDisplay(products) {
+function productsDisplay(products) {
   //Déclaration des variables
   let productId = []
   let productName = [];
@@ -36,7 +38,6 @@ function productDisplay(products) {
   let imgAlt = [];
   let cardStructure = [];
 
-  console.log("Florie");
   //sélection élément du DOM
   const positionElement = document.querySelector('#items');
 
