@@ -1,4 +1,5 @@
-/*//Déclaration d'une promesse pour l'ID
+////////// PROMESSE //////////
+//Déclaration d'une promesse pour l'ID
 const PromesseProduit = new Promise((resolve, reject) => {
   resolve("Affichage du produit & ajout au panier réussi")
 });
@@ -8,13 +9,31 @@ console.log(PromesseProduit);
 PromesseProduit
   .then((resolve) => {
     idRecovery();
-    
+
   })
   //catch de la promesse
-  .catch ((erreur) => {
-  console.log(erreur);
+  .catch((erreur) => {
+    console.log(erreur);
   });
 
+////////// CONSTANTES ET VARIABLES //////////  
+let api = 'http://localhost:3000/api/products';
+var imgUrl = "";
+var imgAlt = "";
+var productName = "";
+var productPrice = "";
+var productDescription = "";
+var choiceColor = "";
+var choiceQuantity = "";
+var valuesProduct = "";
+var imgProduct = "";
+var atlProduct = "";
+var nameProduct = "";
+var colorProduct = "";
+var quantityProduct = "";
+var priceProduct = "";
+
+/////////// FONCTIONS //////////
 //Création fonction de récupération de l'ID du produit
 function idRecovery() {
   //Récupération de l'ID dans l'URL
@@ -26,10 +45,8 @@ function idRecovery() {
   const product_id = Urlrécup.get("id");
   console.log(product_id);
 
-  loadData(api);
+  loadData(api + "/" + product_id);
 }
-
-let api = 'http://localhost:3000/api/products';
 
 //Création fonction appel API
 function loadData(url) {
@@ -37,12 +54,12 @@ function loadData(url) {
   fetch(url)
     .then((httpBodyResponse) => httpBodyResponse.json())
     .then((products) => {
-      console.table(products);
+      console.log(products);
 
       try {
         //Appel de la fonction d’affichage des produits 
         productDisplay(products);
-        //addCart(cart);
+        recoveryChoice();
 
         //Catch du Try
       } catch (err) {
@@ -56,66 +73,62 @@ function loadData(url) {
     });
 }
 
-
 //Création fonction d'affichage dynamique du produit
 function productDisplay(product) {
-  //Retrouver dans l'API le produit correspondant à l'ID
-  const idProduit = product.find((element) => element._id === product_id);
-  console.log(idProduit);
 
   //Retour Image & Alt 
-  const imgUrl = idProduit.imageUrl;
+  imgUrl = product.imageUrl;
   console.log(imgUrl);
-  const imgAlt = idProduit.altTxt;
+  imgAlt = product.altTxt;
   console.log(imgAlt);
   document.querySelector('.item__img img').src = imgUrl;
   document.querySelector('.item__img img').alt = imgAlt;
 
   //Retour Name
-  const productName = idProduit.name;
+  productName = product.name;
   console.log(productName);
   const affichage_Name = document.querySelector("#title");
   affichage_Name.innerHTML = productName;
 
   //Retour Price
-  const productPrice = idProduit.price;
+  productPrice = product.price;
   console.log(productPrice);
   const affichage_Price = document.querySelector("#price");
   affichage_Price.innerHTML = productPrice;
 
   //Retour Description
-  const productDescription = idProduit.description;
+  productDescription = product.description;
   console.log(productDescription);
   const affichage_Description = document.querySelector("#description");
   affichage_Description.innerHTML = productDescription;
 
   //Retour des options couleurs
-    //Déclaration des variables
-    let colors = [];
-    let optionStructure = [];
-    let nameOption = [];
-    //Importation des couleurs
-    colors = idProduit.colors;
-    console.log(colors);
-    //sélection élément du DOM
-    var elt = document.querySelector("#colors");
-    //Création de la boucle
-    for (var i = 0; i < colors.length; i++) {
-      //Stockage des données dans les variables
-      product.forEach((element, i) => {
-        nameOption[i] = colors[i]
-      });
-      //Affichage des objets dans la page
-      optionStructure += `
+  //Déclaration des variables
+  let colors = [];
+  let optionStructure = [];
+  let nameOption = [];
+  //Importation des couleurs
+  colors = product.colors;
+  console.log(colors);
+  //sélection élément du DOM
+  var elt = document.querySelector("#colors");
+  //Création de la boucle
+  for (var i = 0; i < colors.length; i++) {
+    //Stockage des données dans les variables
+
+    nameOption[i] = colors[i]
+
+    //Affichage des objets dans la page
+    optionStructure += `
                     <option value="${nameOption[i]}">${nameOption[i]}</option>
                     `;
-      //Injection dans le HTML
-      elt.innerHTML = optionStructure;
-    }
+    //Injection dans le HTML
+    elt.innerHTML = optionStructure;
+  }
 }
 
 // Création de la fonction de mise en panier
-function addCart(cart) {
+function recoveryChoice() {
   //Récupération des données du produits
   //Sélection de la couleur
   const color = document.querySelector("#colors");
@@ -131,13 +144,13 @@ function addCart(cart) {
     event.preventDefault();
 
     //Sélection du choix couleur et quantité de l'utilisateur
-    const choiceColor = color.value;
+    choiceColor = color.value;
     console.log(choiceColor);
-    const choiceQuantity = quantity.value;
+    choiceQuantity = quantity.value;
     console.log(choiceQuantity);
 
     //Récupération des valeurs du produits
-    let valuesProduct = {
+    valuesProduct = {
       imgProduct: imgUrl,
       atlProduct: imgAlt,
       nameProduct: productName,
@@ -146,13 +159,15 @@ function addCart(cart) {
       priceProduct: productPrice,
     }
     console.log(valuesProduct);
+
+    addStorage();
   })
 
-  addStorage(storage);
+  
 }
 
 //Création de la fonction de mise en stckage local
-function addStorage(storage) {
+function addStorage() {
   //Déclaration variable de stockage des valeurs du storage
   let productsStorage = JSON.parse(localStorage.getItem("keyProduct")); //conversion des données du local de JSON en JS
   console.log(productsStorage);
@@ -164,7 +179,9 @@ function addStorage(storage) {
     localStorage.setItem("keyProduct", JSON.stringify(productsStorage));
   };
   //Création d'une condition pour vérifier s'il y a ou non des données dans le storage
-  if (productsStorage) {
+  if (nameProduct === productName && colorProduct === choiceColor) {
+    quantityProduct++;
+  } else if (productsStorage) {
     addProductStorage();
     console.log(productsStorage);
   } else {
@@ -172,10 +189,10 @@ function addStorage(storage) {
     addProductStorage();
     console.log(productsStorage);
   }
-}*/
+}
 
-
-//Déclaration d'une promesse pour l'ID
+/*
+//Déclaration d'une promesse pour l'ID²²²²²²²²
 const PromesseProduit = new Promise((resolve, reject) => {
   resolve("La récupération de l'id a marchée")
 });
@@ -209,7 +226,7 @@ PromesseProduit
           const idProduit = products.find((element) => element._id === product_id);
           console.log(idProduit)
 
-          //Retour Image & Alt 
+          //Retour Image & Alt
           const imgUrl = idProduit.imageUrl;
           console.log(imgUrl);
           const imgAlt = idProduit.altTxt;
@@ -266,14 +283,14 @@ PromesseProduit
             console.log(color);
             //Sélection de la quantité
             const quantity = document.querySelector("#quantity")
-            
+
             //Selection du bouton de commande
             const btnPanier = document.querySelector("#addToCart");
             console.log(btnPanier);
             //Ecouter le bouton de commande
             btnPanier.addEventListener("click", (event) => {
               event.preventDefault();
-              
+
               //Sélection du choix couleur et quantité de l'utilisateur
               const choiceColor = color.value;
               console.log(choiceColor);
@@ -282,10 +299,10 @@ PromesseProduit
 
               //Récupération des valeurs du produits
               let valuesProduct = {
-                imgProduct: imgUrl, 
+                imgProduct: imgUrl,
                 atlProduct: imgAlt,
-                nameProduct: productName, 
-                colorProduct: choiceColor, 
+                nameProduct: productName,
+                colorProduct: choiceColor,
                 quantityProduct: choiceQuantity,
                 priceProduct: productPrice
               }
@@ -304,15 +321,15 @@ PromesseProduit
                 };
                 //Création d'une condition pour vérifier s'il y a ou non des données dans le storage
                 if(productsStorage){
-                  addProductStorage(); 
+                  addProductStorage();
                   console.log(productsStorage);
                 } else {
-                  productsStorage = []; 
+                  productsStorage = [];
                   addProductStorage();
                   console.log(productsStorage);
                 }
             });
-          
+
           //Catch du Try
         } catch (err) {
           alert("Il y a eu un problème avec l'opération try: " + err.message)
@@ -328,4 +345,4 @@ PromesseProduit
   .catch((erreur) => {
     console.log(erreur);
   })
-});
+}); */
