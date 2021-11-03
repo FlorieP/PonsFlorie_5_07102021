@@ -124,29 +124,46 @@ function recoveryChoice(product) {
     }
     console.log(valuesProduct);
 
-    //addStorage();
+    addToCart (valuesProduct);
   })
 }
 
-//Création de la fonction de mise en stckage local
-function addStorage() {
-  //Déclaration variable de stockage des valeurs du storage
-  let productsStorage = JSON.parse(localStorage.getItem("keyProduct")); //conversion des données du local de JSON en JS
-  console.log(productsStorage);
-  //Fonction d'ajout de produit dans le storage
-  const addProductStorage = () => {
-    //Ajout du produit avec option choisi dans le tableau du storage
-    productsStorage.push(valuesProduct);
-    //Transformation en JSON et envoie dans la clé du storage
-    localStorage.setItem("keyProduct", JSON.stringify(productsStorage));
-  };
-  //Création d'une condition pour vérifier s'il y a ou non des données dans le storage
-  if (productsStorage) {
-    addProductStorage();
-    console.log(productsStorage);
+//Création de la fonction d'ffichage du contenu du Storage
+function viewStorage () {
+  let cart = localStorage.getItem("product");
+  if (cart == null) {
+    return [];
   } else {
-    productsStorage = [];
-    addProductStorage();
-    console.log(productsStorage);
+    return JSON.parse(cart);
   }
+}
+
+//Création de la donction de sauvegarde du panier dans le storage
+function addStorage (cart) {
+  localStorage.setItem("product", JSON.stringify(cart));
+}
+
+//Création de la fonction de vérification des doublons de produits
+function checkSameProduct (cart, nameProduct, colorProduct) {
+  let same = null;
+  for (let jsonCartProduct of cart) {
+    if (jsonCartProduct.name == nameProduct && jsonCartProduct.color == colorProduct) {
+      same = cart.indexOf(jsonCartProduct);
+      console.log(same);
+      break;
+    }
+  }
+  return same;
+}
+
+//Création de la fonction de la mise en panier
+function addToCart (valuesProduct) {
+  let cart = viewStorage();
+  let sameProduct = checkSameProduct(cart, valuesProduct.name, valuesProduct.color);
+  if (sameProduct == null) {
+    cart.push(valuesProduct);
+  } else {
+    cart[sameProduct].quantityProduct = parseInt(cart[sameProduct].quantityProduct) + parseInt(sameProduct.quantityProduct);
+  }
+  addStorage(cart);
 }
