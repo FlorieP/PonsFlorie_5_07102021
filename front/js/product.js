@@ -59,40 +59,40 @@ function loadData(url) {
 function productDisplay(product) {
 
   //Affichage des éléments du produit sur la page
-    //Affichage image
-    document.querySelector('.item__img img').src = product.imageUrl;
-    document.querySelector('.item__img img').alt = product.altTxt;
-    //Affichage title
-    const affichage_Name = document.querySelector("#title");
-    affichage_Name.innerHTML = product.name;
-    //Affichage Price
-    const affichage_Price = document.querySelector("#price");
-    affichage_Price.innerHTML = product.price;
-    //Affichage Description
-    const affichage_Description = document.querySelector("#description");
-    affichage_Description.innerHTML = product.description;
-    //Retour des options couleurs
-      //Déclaration des variables
-      let colors = [];
-      let optionStructure = [];
-      let nameOption = [];
-      //Importation des couleurs
-      colors = product.colors;
-      console.log(product.colors);
-      //sélection élément du DOM
-      var elt = document.querySelector("#colors");
-      //Création de la boucle
-      for (var i = 0; i < colors.length; i++) {
-        //Stockage des données dans les variables
-        nameOption[i] = colors[i]
+  //Affichage image
+  document.querySelector('.item__img img').src = product.imageUrl;
+  document.querySelector('.item__img img').alt = product.altTxt;
+  //Affichage title
+  const affichage_Name = document.querySelector("#title");
+  affichage_Name.innerHTML = product.name;
+  //Affichage Price
+  const affichage_Price = document.querySelector("#price");
+  affichage_Price.innerHTML = product.price;
+  //Affichage Description
+  const affichage_Description = document.querySelector("#description");
+  affichage_Description.innerHTML = product.description;
+  //Retour des options couleurs
+  //Déclaration des variables
+  let colors = [];
+  let optionStructure = [];
+  let nameOption = [];
+  //Importation des couleurs
+  colors = product.colors;
+  console.log(product.colors);
+  //sélection élément du DOM
+  var elt = document.querySelector("#colors");
+  //Création de la boucle
+  for (var i = 0; i < colors.length; i++) {
+    //Stockage des données dans les variables
+    nameOption[i] = colors[i]
 
-        //Affichage des objets dans la page
-        optionStructure += `
+    //Affichage des objets dans la page
+    optionStructure += `
                         <option value="${nameOption[i]}">${nameOption[i]}</option>
                         `;
-        //Injection dans le HTML
-        elt.innerHTML = optionStructure;
-      }
+    //Injection dans le HTML
+    elt.innerHTML = optionStructure;
+  }
 }
 
 // Création de la fonction de mise en panier
@@ -111,10 +111,21 @@ function recoveryChoice(product) {
 
     //Sélection du choix couleur et quantité de l'utilisateur
     console.log(color.value);
-    console.log(quantity.value);
+    checkQuantityValue(product, color);
 
+
+  })
+}
+
+//Création de la fonction de contrôle de la quantité
+function checkQuantityValue(product, color) {
+  if (quantity.value < 1 || quantity.value > 100) {
+    window.alert("La quantité choisie est incorrecte, elle doit être comprise entre 1 et 100");
+  } else {
+    console.log(quantity.value);
     //Récupération des valeurs du produits
     valuesProduct = {
+      idProduct: product._id,
       imgProduct: product.imageUrl,
       atlProduct: product.altTxt,
       nameProduct: product.name,
@@ -124,12 +135,12 @@ function recoveryChoice(product) {
     }
     console.log(valuesProduct);
 
-    addToCart (valuesProduct);
-  })
+    addToCart(valuesProduct);
+  }
 }
 
 //Création de la fonction d'ffichage du contenu du Storage
-function viewStorage () {
+function viewStorage() {
   let cart = localStorage.getItem("product");
   if (cart == null) {
     return [];
@@ -139,15 +150,17 @@ function viewStorage () {
 }
 
 //Création de la donction de sauvegarde du panier dans le storage
-function addStorage (cart) {
+function addStorage(cart) {
   localStorage.setItem("product", JSON.stringify(cart));
 }
 
 //Création de la fonction de vérification des doublons de produits
-function checkSameProduct (cart, nameProduct, colorProduct) {
+function checkSameProduct(cart, idProduct, colorProduct) {
   let same = null;
   for (let jsonCartProduct of cart) {
-    if (jsonCartProduct.name == nameProduct && jsonCartProduct.color == colorProduct) {
+    console.log(idProduct + "/" + jsonCartProduct.idProduct);
+    console.log(colorProduct + "/" + jsonCartProduct.colorProduct);
+    if (jsonCartProduct.idProduct == idProduct && jsonCartProduct.colorProduct == colorProduct) {
       same = cart.indexOf(jsonCartProduct);
       console.log(same);
       break;
@@ -157,13 +170,19 @@ function checkSameProduct (cart, nameProduct, colorProduct) {
 }
 
 //Création de la fonction de la mise en panier
-function addToCart (valuesProduct) {
+function addToCart(valuesProduct) {
   let cart = viewStorage();
-  let sameProduct = checkSameProduct(cart, valuesProduct.name, valuesProduct.color);
+  let sameProduct = checkSameProduct(cart, valuesProduct.idProduct, valuesProduct.colorProduct);
   if (sameProduct == null) {
     cart.push(valuesProduct);
   } else {
-    cart[sameProduct].quantityProduct = parseInt(cart[sameProduct].quantityProduct) + parseInt(sameProduct.quantityProduct);
+    let sum = parseInt(cart[sameProduct].quantityProduct) + parseInt(valuesProduct.quantityProduct);
+    if (sum < 1 || sum > 100) {
+      window.alert("La quantité commandée dépasse 100! Elle doit être comprise entre 1 et 100");
+    }
+    else {
+      cart[sameProduct].quantityProduct = sum;
+    }
   }
   addStorage(cart);
 }
