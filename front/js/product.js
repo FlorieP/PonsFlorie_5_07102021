@@ -149,7 +149,7 @@ function viewStorage() {
   }
 }
 
-//Création de la donction de sauvegarde du panier dans le storage
+//Création de la fonction de sauvegarde du panier dans le storage
 function addStorage(cart) {
   localStorage.setItem("product", JSON.stringify(cart));
 }
@@ -186,3 +186,4 @@ function addToCart(valuesProduct) {
   }
   addStorage(cart);
 }
+
