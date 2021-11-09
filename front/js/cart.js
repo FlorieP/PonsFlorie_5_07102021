@@ -1,19 +1,18 @@
 ////////// CONSTANTES ET VARIABLES //////////  
 let cart = [];
 
-//Appel des fonctions dans la promesse
+////////// APPEL DES FONCTIONS //////////  
+// Checker le contenu du localStorage et le retourner
 viewStorage();
-// Afficher les produit du panier     
+// Afficher les produits du panier     
 cartDisplay();
 // Préparer l'action de suppression d'une ligne
-deleteProduct();     
+deleteProduct();
 // Mettre à jour la quantité et mettre à jour localStorage       
-//updateQuantity(cart);
+updateQuantity(cart);
 //Calculter la quantité et le prix total du panier
 totalQuantityCart();
-totalPriceCart ();
-   
-
+totalPriceCart();
 
 
 /////////// FONCTIONS //////////
@@ -23,17 +22,15 @@ function viewStorage() {
     if (cart == null) {
         cart = [];
     }
-    console.log(cart);
+    console.table(cart);
 }
 
 //Création de la fonction d'affichage dynamique
 function cartDisplay() {
     //Déclaration des variables
     let cartStructure = [];
-    
     //sélection élément du DOM
     const positionElement = document.querySelector('#cart__items');
-
     //Création de la boucle
     for (var i = 0; i < cart.length; i++) {
         //Affichage des produits dans la page
@@ -61,38 +58,44 @@ function cartDisplay() {
         </article>
         `;
     }
-     //Injection dans le HTML
-     positionElement.innerHTML = cartStructure;
-       
+    //Injection dans le HTML
+    positionElement.innerHTML = cartStructure;
 }
 
 
 function deleteProduct() {
     //Selection du bouton de commande   
     document.querySelectorAll('.deleteItem').forEach(element => {
+        //Ecoute de l'évenement au clique
         element.addEventListener('click', function (event) {
             event.stopPropagation();
             event.preventDefault();
-            console.log("id" + this.closest(".cart__item").dataset.id);
-            console.log("color" + this.closest(".cart__item").dataset.color);
+            // Affichage console de l'id et de la couleur concerné
+            console.log("id: " + this.closest(".cart__item").dataset.id);
+            console.log("color: " + this.closest(".cart__item").dataset.color);
 
             //deleteCartCanape(this.closest(".cart__item").dataset.id, this.closest(".cart__item").dataset.color);
-            this.closest("#cart__items").removeChild(this.closest(".cart__item"));
+            //this.closest("#cart__items").removeChild(this.closest(".cart__item"));
             //updateQuantityPriceHtml(calculTotalQuantity(cart), calculTotalPrice(cart));
-            //localStorage.removeItem(product, )
-            //Alerte produit supprimé et refresh
-            alert("Ce produit a bien été supprimé du panier");
-            location.reload();
 
+            //Selection de l'élément à supprimer en fonction de son id et de sa couleur
+            let idDelete = this.closest(".cart__item").dataset.id;
+            let colorDelete = this.closest(".cart__item").dataset.color;
+            console.log("L'id de l'élément à supprimé est: " + idDelete + " de couleur: " + colorDelete);
+            cart = cart.filter(el => el.idProduct !== idDelete || el.colorProduct !== colorDelete);
+            //Mise à jour du locatStorage     
+            localStorage.setItem("product", JSON.stringify(cart));
+            //Alerte produit supprimé et refresh
+            alert('Ce produit a bien été supprimé du panier');
+            location.reload();
         });
     });
-
 }
 
 //Fonction quantité total panier
-function totalQuantityCart () {
+function totalQuantityCart() {
     let totalQuantity = 0;
-    let quantity =  [];
+    let quantity = [];
     // Parcourir la quantité disponible dans le localStorage
     for (var i = 0; i < cart.length; i++) {
         quantity += cart[i].quantityProduct;
@@ -163,7 +166,7 @@ function updateQuantity() {
                 location.reload();
             }
         })
-    }   
+    }
 }
 
 

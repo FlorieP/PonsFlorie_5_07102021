@@ -3,7 +3,7 @@
 const PromesseProduit = new Promise((resolve, reject) => {
   resolve("Affichage du produit & ajout au panier réussi")
 });
-console.log(PromesseProduit);
+//console.log(PromesseProduit);
 
 //Appel des fonctions dans la promesse
 PromesseProduit
@@ -25,7 +25,7 @@ function idRecovery() {
   //Récupération de l'ID dans l'URL
   const Urlrécup = new URLSearchParams(window.location.search);
   const product_id = Urlrécup.get("id");
-  console.log(product_id);
+  console.log("L'id du produit est : " + product_id);
 
   loadData(api + "/" + product_id);
 }
@@ -110,10 +110,8 @@ function recoveryChoice(product) {
     event.preventDefault();
 
     //Sélection du choix couleur et quantité de l'utilisateur
-    console.log(color.value);
+    console.log("Couleur choisi: " + color.value);
     checkQuantityValue(product, color);
-
-
   })
 }
 
@@ -122,7 +120,7 @@ function checkQuantityValue(product, color) {
   if (quantity.value < 1 || quantity.value > 100) {
     window.alert("La quantité choisie est incorrecte, elle doit être comprise entre 1 et 100");
   } else {
-    console.log(quantity.value);
+    console.log("Quantité choisi :" + quantity.value);
     //Récupération des valeurs du produits
     valuesProduct = {
       idProduct: product._id,
@@ -158,11 +156,11 @@ function addStorage(cart) {
 function checkSameProduct(cart, idProduct, colorProduct) {
   let same = null;
   for (let jsonCartProduct of cart) {
-    console.log(idProduct + "/" + jsonCartProduct.idProduct);
-    console.log(colorProduct + "/" + jsonCartProduct.colorProduct);
+    console.log(idProduct + " / " + jsonCartProduct.idProduct);
+    console.log(colorProduct + " / " + jsonCartProduct.colorProduct);
     if (jsonCartProduct.idProduct == idProduct && jsonCartProduct.colorProduct == colorProduct) {
       same = cart.indexOf(jsonCartProduct);
-      console.log(same);
+      console.log("Il y a " + same + " produit identique dans le Storage");
       break;
     }
   }
@@ -185,5 +183,6 @@ function addToCart(valuesProduct) {
     }
   }
   addStorage(cart);
+  alert('Ce produit a bien été ajouté au panier');
 }
 
