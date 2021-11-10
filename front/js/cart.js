@@ -1,6 +1,8 @@
 ////////// CONSTANTES ET VARIABLES //////////  
 let cart = [];
 
+let quantity = [];
+
 ////////// APPEL DES FONCTIONS //////////  
 // Checker le contenu du localStorage et le retourner
 viewStorage();
@@ -64,7 +66,7 @@ function cartDisplay() {
 
 
 function deleteProduct() {
-    //Selection du bouton de commande   
+    //Selection du bouton de suppression  
     document.querySelectorAll('.deleteItem').forEach(element => {
         //Ecoute de l'évenement au clique
         element.addEventListener('click', function (event) {
@@ -73,11 +75,6 @@ function deleteProduct() {
             // Affichage console de l'id et de la couleur concerné
             console.log("id: " + this.closest(".cart__item").dataset.id);
             console.log("color: " + this.closest(".cart__item").dataset.color);
-
-            //deleteCartCanape(this.closest(".cart__item").dataset.id, this.closest(".cart__item").dataset.color);
-            //this.closest("#cart__items").removeChild(this.closest(".cart__item"));
-            //updateQuantityPriceHtml(calculTotalQuantity(cart), calculTotalPrice(cart));
-
             //Selection de l'élément à supprimer en fonction de son id et de sa couleur
             let idDelete = this.closest(".cart__item").dataset.id;
             let colorDelete = this.closest(".cart__item").dataset.color;
@@ -95,12 +92,11 @@ function deleteProduct() {
 //Fonction quantité total panier
 function totalQuantityCart() {
     let totalQuantity = 0;
-    let quantity = [];
+    //let quantity = [];
     // Parcourir la quantité disponible dans le localStorage
     for (var i = 0; i < cart.length; i++) {
         quantity += cart[i].quantityProduct;
     }
-    console.log(quantity);
     //Calcul quantité total
     for (var j = 0; j < quantity.length; j++) {
         totalQuantity += parseInt(quantity[j]);
@@ -117,56 +113,58 @@ function totalPriceCart() {
     for (var i = 0; i < cart.length; i++) {
         totalPrice += cart[i].quantityProduct * cart[i].priceProduct;
     }
+    console.log(totalPrice);
     //Affichage prix total
     totalPrice = document.getElementById('totalPrice').textContent = totalPrice;
 
 };
 
-// Création fonction pour lire le changement de quantité
-function updateQuantity() {
-    /*//Selection de la balise quantité<
-    const selectQuantity = document.querySelector(".itemQuantity");
-    //Ecouter la balise au changement
-    selectQuantity.addEventListener("change", (event) => {
-        event.preventDefault();
-        if (selectQuantity.value < 1 || selectQuantity.value > 100) {
-            window.alert("La quantité choisie est incorrecte, elle doit être comprise entre 1 et 100");
-        } else {
-            console.log(selectQuantity.value);
-
-
-
-            //Maj Storage et recharge de la page
-            localStorage.setItem("produit", JSON.stringify(cart));
-            location.reload();
+//Fonction qui permet de voir si un produit est présent dans le tableau par son id et sa couleur
+function checkProductIdColor(cart, idProduct, colorProduct) {
+    let find = null;
+    console.log(cart.idProduct);
+    console.log(cart.colorProduct);
+    for (let jsonCartProduct of cart) {
+        console.log(cart);
+        console.log(jsonCartProduct.id + ' / ' + cart.idProduct);
+        console.log(jsonCartProduct.color + ' / ' + cart.colorProduct);
+        if (jsonCartProduct.idProduct == cart.idProduct && jsonCartProduct.colorProduct == cart.colorProduct) {
+            find = cart.indexOf(jsonCartProduct);
+            console.log(jsonCartProduct.id + ' / ' + idProduct);
+            console.log(jsonCartProduct.color + ' / ' + colorProduct);
+            break;
         }
-    })*/
-
-    //Selection de la balise quantité
-    let quantity = document.querySelectorAll(".itemQuantity");
-    //Ecouter la balise au changement
-    for (var i = 0; i < quantity.length; i++) {
-        quantity[i].addEventListener("change", (event) => {
-            event.preventDefault();
-            event.stopPropagation();
-            //Condition de quantité min et max
-            if (quantity.value < 1 || quantity.value > 100) {
-                window.alert("La quantité choisie est incorrecte, elle doit être comprise entre 1 et 100");
-            } else {
-                //Déclaration tableaux
-                let selectQuantity = cart[i].quantityProduct;
-                let quantityValue = quantity[i].value;
-                //Recherche de la quantité 
-                const resultQuantity = cart.find((el) => el.quantityValue !== selectQuantity);
-                //Récupération résultat
-                resultQuantity.quantityProduct = quantityValue;
-                cart[i].quantityProduct = resultQuantity.quantityProduct;
-                //Maj Storage et recharge de la page
-                localStorage.setItem("produit", JSON.stringify(cart));
-                location.reload();
-            }
-        })
     }
+    return find;
 }
 
+
+// Création fonction pour lire le changement de quantité
+function updateQuantity(cart, idProduct, colorProduct, quantityProduct) {
+    //Selection de la balise quantité 
+    document.querySelectorAll('.itemQuantity').forEach(qty => {
+        //Ecoute de l'évenement au changement
+        qty.addEventListener('change', function (event) {
+            event.stopPropagation();
+            event.preventDefault();
+            // Affichage console de l'id et de la couleur concerné
+            console.log("id: " + this.closest(".cart__item").dataset.id);
+            console.log("color: " + this.closest(".cart__item").dataset.color);
+            //Condition de quantité min et max
+            if (qty < 1 || qty > 100) {
+                window.alert("La quantité choisie est incorrecte, elle doit être comprise entre 1 et 100");
+            } else {
+                //Recherche du produit correspondant et changement de quantité
+                let findProduct = checkProductIdColor(cart, idProduct, colorProduct);
+                console.log(findProduct);
+                //cart[findProduct].quantityProduct = parseInt(qty):
+                //Mise à jour du locatStorage     
+                localStorage.setItem("product", JSON.stringify(cart));
+                //Alerte produit supprimé et refresh
+                alert('La quantité de ce produit à bien été modifié');
+                location.reload();
+            };
+        });
+    });
+}
 
