@@ -11,7 +11,7 @@ cartDisplay();
 // Préparer l'action de suppression d'une ligne
 deleteProduct();
 // Mettre à jour la quantité et mettre à jour localStorage       
-updateQuantity(cart);
+updateQuantity();
 //Calculter la quantité et le prix total du panier
 totalQuantityCart();
 totalPriceCart();
@@ -120,18 +120,19 @@ function totalPriceCart() {
 };
 
 //Fonction qui permet de voir si un produit est présent dans le tableau par son id et sa couleur
-function checkProductIdColor(cart, idProduct, colorProduct) {
+function checkProductIdColor(idProduct, colorProduct) {
     let find = null;
-    console.log(cart.idProduct);
-    console.log(cart.colorProduct);
+    console.log(idProduct);
+    console.log(colorProduct);
     for (let jsonCartProduct of cart) {
-        console.log(cart);
-        console.log(jsonCartProduct.id + ' / ' + cart.idProduct);
-        console.log(jsonCartProduct.color + ' / ' + cart.colorProduct);
-        if (jsonCartProduct.idProduct == cart.idProduct && jsonCartProduct.colorProduct == cart.colorProduct) {
+        
+        console.log(jsonCartProduct.idProduct + ' / ' + idProduct);
+        console.log(jsonCartProduct.colorProduct + ' / ' + colorProduct);
+        if (jsonCartProduct.idProduct == idProduct &&
+             jsonCartProduct.colorProduct == colorProduct) {
             find = cart.indexOf(jsonCartProduct);
-            console.log(jsonCartProduct.id + ' / ' + idProduct);
-            console.log(jsonCartProduct.color + ' / ' + colorProduct);
+            console.log(jsonCartProduct.idProduct + ' / ' + idProduct);
+            console.log(jsonCartProduct.colorProduct + ' / ' + colorProduct);
             break;
         }
     }
@@ -140,7 +141,7 @@ function checkProductIdColor(cart, idProduct, colorProduct) {
 
 
 // Création fonction pour lire le changement de quantité
-function updateQuantity(cart, idProduct, colorProduct, quantityProduct) {
+function updateQuantity() {
     //Selection de la balise quantité 
     document.querySelectorAll('.itemQuantity').forEach(qty => {
         //Ecoute de l'évenement au changement
@@ -150,14 +151,17 @@ function updateQuantity(cart, idProduct, colorProduct, quantityProduct) {
             // Affichage console de l'id et de la couleur concerné
             console.log("id: " + this.closest(".cart__item").dataset.id);
             console.log("color: " + this.closest(".cart__item").dataset.color);
+            let id= this.closest(".cart__item").dataset.id;
+            let color= this.closest(".cart__item").dataset.color;
             //Condition de quantité min et max
             if (qty < 1 || qty > 100) {
                 window.alert("La quantité choisie est incorrecte, elle doit être comprise entre 1 et 100");
             } else {
                 //Recherche du produit correspondant et changement de quantité
-                let findProduct = checkProductIdColor(cart, idProduct, colorProduct);
+                let findProduct = checkProductIdColor(id, color);
                 console.log(findProduct);
-                //cart[findProduct].quantityProduct = parseInt(qty):
+                console.log("qté:"+cart[findProduct].quantityProduct);
+                cart[findProduct].quantityProduct = parseInt(this.value);
                 //Mise à jour du locatStorage     
                 localStorage.setItem("product", JSON.stringify(cart));
                 //Alerte produit supprimé et refresh
@@ -168,3 +172,109 @@ function updateQuantity(cart, idProduct, colorProduct, quantityProduct) {
     });
 }
 
+
+/////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////// VALIDATION DU FORMULAIRE //////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+
+
+
+// Regex Prénom
+var firstName = document.getElementById('firstName');
+var firstNameErrorMsg = document.getElementById('firstNameErrorMsg');
+firstName.addEventListener('change', (event) => {
+    var firstName_validation = /^[A-Za-zÀÁÂÃÄÅÈÉÊËÌÍÎÏàáâãäâèéêëìíîïç][a-zàáâãäâèéêëìíîïç]+([-'\s][A-Za-zÀÁÂÃÄÅÈÉÊËÌÍÎÏàáâãäâèéêëìíîïç][a-zàáâãäâèéêëìíîïç]+)?/;
+
+    if (firstName_validation.test(firstName.value) == false){
+        event.preventDefault();
+        firstNameErrorMsg.textContent = 'Format du prénom incorrecte';
+        firstNameErrorMsg.style.color = 'lightred';
+    } else {
+        console.log(firstName.value);
+    }
+});
+
+// Regex Nom
+var lastName = document.getElementById('lastName');
+var lastNameErrorMsg = document.getElementById('lastNameErrorMsg');
+lastName.addEventListener('change', (event) => {
+    var lastName_validation = /[A-Za-zÀÁÂÃÄÅÈÉÊËÌÍÎÏàáâãäâèéêëìíîïç]+([-'\s][A-Za-zÀÁÂÃÄÅÈÉÊËÌÍÎÏàáâãäâèéêëìíîïç]+)?/;
+
+    if (lastName_validation.test(lastName.value) == false){
+        event.preventDefault();
+        lastNameErrorMsg.textContent = 'Format du nom incorrecte';
+        lastNameErrorMsg.style.color = 'lightred';
+    } else {
+        console.log(lastName.value);
+    }
+});
+
+// Regex adresse
+var address = document.getElementById('address');
+var addressErrorMsg = document.getElementById('addressErrorMsg');
+address.addEventListener('change', (event) => {
+    var address_validation = /[ ]/;
+
+    if (address_validation.test(address.value) == false){
+        event.preventDefault();
+        addressErrorMsg.textContent = 'Format de l\'adresse incorrecte';
+        addressErrorMsg.style.color = 'lightred';
+    } else {
+        console.log(address.value);
+    }
+});
+
+// Regex ville
+var city = document.getElementById('city');
+var cityErrorMsg = document.getElementById('cityErrorMsg');
+city.addEventListener('change', (event) => {
+    var city_validation = /[A-Za-zÀÁÂÃÄÅÈÉÊËÌÍÎÏàáâãäâèéêëìíîïç]+([-\s][A-Za-zÀÁÂÃÄÅÈÉÊËÌÍÎÏàáâãäâèéêëìíîïç]+)?/;
+
+    if (city_validation.test(city.value) == false){
+        event.preventDefault();
+        cityErrorMsg.textContent = 'Format de la ville incorrecte';
+        cityErrorMsg.style.color = 'lightred';
+    } else {
+        console.log(city.value);
+    }
+});
+
+// Regex email
+var email = document.getElementById('email');
+var emailErrorMsg = document.getElementById('emailErrorMsg');
+email.addEventListener('change', (event) => {
+    var email_validation = /^[a-zA-Z0-9.-_]+[@]+[a-zA-Z0-9]+[.]+[a-zA-Z]/;
+
+    if (email_validation.test(email.value) == false){
+        event.preventDefault();
+        emailErrorMsg.textContent = 'Format de l\'adresse email incorrecte';
+        emailErrorMsg.style.color = 'lightred';
+    } else {
+        console.log(email.value);
+    }
+});
+
+
+
+// Récupération du bouton Commander   
+var validation = document.getElementById('order')
+console.log(validation);
+validation.addEventListener('click', function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (lastName && firstName && address && city && email) {
+
+        // Ajout des informations du contact dans l'object contact
+        let contact = {
+          lastName : lastName.value,
+          firstName : firstName.value,
+          address : address.value,
+          city : city.value,
+          email : email.value,
+        };
+        console.log(contact);
+    }
+});
+
+ 
