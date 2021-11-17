@@ -271,9 +271,45 @@ validation.addEventListener('click', function (event) {
           firstName : firstName.value,
           address : address.value,
           city : city.value,
-          email : email.value,
+          email : email.value
         };
         console.log(contact);
+
+        // Ajout de l'id des produits commandé dans l'objetc products
+        let productsList = [];
+        for (var i = 0; i < cart.length; i++) {
+           productsList += cart[i].idProduct;
+        }
+        console.log(productsList);
+
+        //Envoie de la requête POST
+        let api = 'http://localhost:3000/api/products/order';
+
+        let order = {
+            contact :  contact,
+            products :  productsList
+        };
+
+        let initOrder = {
+            method:'POST',
+            body : JSON.stringify(order),
+            headers : {
+                'Content-Type': 'application/json'
+              }
+        };
+
+        //Envoie du fetch
+        fetch(api, initOrder)
+            .then((httpBodyResponse) => httpBodyResponse.json())
+            .then((response) => {
+                let newOrder = JSON.stringify(response)
+                localStorage.setItem('order', newOrder)
+
+                //Chargement page Confirmation
+            })
+
+
+            
     }
 });
 
