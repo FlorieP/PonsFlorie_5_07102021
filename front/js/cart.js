@@ -1,6 +1,5 @@
 ////////// CONSTANTES ET VARIABLES //////////  
 let cart = [];
-
 let quantity = [];
 
 ////////// APPEL DES FONCTIONS //////////  
@@ -278,39 +277,52 @@ validation.addEventListener('click', function (event) {
         // Ajout de l'id des produits commandé dans l'objetc products
         let productsList = [];
         for (var i = 0; i < cart.length; i++) {
-           productsList += cart[i].idProduct;
+           productsList.push(cart[i].idProduct);
         }
         console.log(productsList);
 
-        //Envoie de la requête POST
-        let api = 'http://localhost:3000/api/products/order';
-
-        let order = {
-            contact :  contact,
-            products :  productsList
-        };
-
-        let initOrder = {
-            method:'POST',
-            body : JSON.stringify(order),
-            headers : {
-                'Content-Type': 'application/json'
-              }
-        };
-
-        //Envoie du fetch
-        fetch(api, initOrder)
-            .then((httpBodyResponse) => httpBodyResponse.json())
-            .then((response) => {
-                let newOrder = JSON.stringify(response)
-                localStorage.setItem('order', newOrder)
-
-                //Chargement page Confirmation
+        //Fetch 
+        fetch("http://localhost:3000/api/products/order", {
+            method:
+                "POST",
+            headers: {
+                'Accept':
+                    'application/json',
+                'Content-Type':
+                    'application/json'
+            },
+            body:
+                JSON.stringify({
+                    contact: contact,
+                    products: productsList
+                })
+        })
+    
+            .then(function (resultat) {
+    
+                if (resultat.ok) {
+                    console.log(resultat);
+                    return resultat.json();
+                }
             })
-
-
+    
+            .then(function (jsonres) {
+                console.log(jsonres);
+                localStorage.removeItem('product');
+                document.location.href = `./confirmation.html?orderId=${jsonres.orderId}`;
+            })
             
+            .catch(function (erreur) {
+                alert("Impossible de passer la commande");
+                console.log(erreur);
+            });
     }
 });
 
- 
+function idOrderDisplay () {
+    const idOrder = document.querySelector('#orderId');
+    idOrder = jsonres.orderId;
+    console.log(idOrder);
+}
+
+
