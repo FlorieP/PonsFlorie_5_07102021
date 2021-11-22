@@ -310,7 +310,7 @@ validation.addEventListener('click', function (event) {
             .then(function (jsonres) {
                 console.log(jsonres);
                 console.log(jsonres.orderId);
-               // localStorage.removeItem('product');
+                localStorage.removeItem('product');
                 document.location.href = `./confirmation.html?orderId=${jsonres.orderId}`;
                // idOrderDisplay (jsonres);
             })
