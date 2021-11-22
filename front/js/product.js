@@ -183,6 +183,14 @@ function addToCart(valuesProduct) {
     }
   }
   addStorage(cart);
-  alert('Ce produit a bien été ajouté au panier');
+  confirmation (valuesProduct);
 }
 
+function confirmation (valuesProduct) {
+  if(window.confirm(`Le canapé ${valuesProduct.nameProduct} de couleur ${valuesProduct.colorProduct} a bien été ajouté au panier. 
+Pour consultez le Panier cliquez sur "OK", pour revenir à l'acceuil cliquez sur "ANNULER`)){
+    window.location.href = "cart.html";
+  } else {
+    window.location.href = "index.html";
+  }
+}
