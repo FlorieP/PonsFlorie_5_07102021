@@ -1,6 +1,7 @@
 ////////// CONSTANTES ET VARIABLES //////////  
 let cart = [];
 let quantity = [];
+let cartStructure = [];
 
 ////////// APPEL DES FONCTIONS //////////  
 // Checker le contenu du localStorage et le retourner
@@ -29,7 +30,7 @@ function viewStorage() {
 //Création de la fonction d'affichage dynamique
 function cartDisplay() {
     //Déclaration des variables
-    let cartStructure = [];
+    //let cartStructure = [];
     //sélection élément du DOM
     const positionElement = document.querySelector('#cart__items');
     //Création de la boucle
@@ -308,8 +309,10 @@ validation.addEventListener('click', function (event) {
     
             .then(function (jsonres) {
                 console.log(jsonres);
-                localStorage.removeItem('product');
+                console.log(jsonres.orderId);
+               // localStorage.removeItem('product');
                 document.location.href = `./confirmation.html?orderId=${jsonres.orderId}`;
+               // idOrderDisplay (jsonres);
             })
             
             .catch(function (erreur) {
@@ -319,10 +322,10 @@ validation.addEventListener('click', function (event) {
     }
 });
 
-function idOrderDisplay () {
-    const idOrder = document.querySelector('#orderId');
+function idOrderDisplay (jsonres) {
+    let idOrder = document.getElementById('orderId');
     idOrder = jsonres.orderId;
-    console.log(idOrder);
+    console.log(jsonres.orderId + ' / ' + idOrder);
 }
 
 
