@@ -29,8 +29,6 @@ function viewStorage() {
 
 //Création de la fonction d'affichage dynamique
 function cartDisplay() {
-    //Déclaration des variables
-    //let cartStructure = [];
     //sélection élément du DOM
     const positionElement = document.querySelector('#cart__items');
     //Création de la boucle
