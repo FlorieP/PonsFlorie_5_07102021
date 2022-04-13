@@ -1,15 +1,34 @@
-# Kanap #
+# KANAP
 
-This is the front end and back end server for Project 5 of the Web Developer path.
+Construire un site e-commerce en JavaScript (partie Front)
+  
+## Pré-requis
 
-### Back end Prerequisites ###
+Logiciels nécessaires pour lancer l'application:
 
-You will need to have Node and `npm` installed locally on your machine.
+- Node.js
+  
+## Installation
+### Back
 
-### Back end Installation ###
+1. Telechargez et installer Node.js:
+```bash
+  npm install
+``` 
+2. Initialiser le projet : 
+```bash
+  npm start
+``` 
+3. Puis lancez le serveur en tapant la commande : 
+```bash
+  node server
+``` 
+- Le serveur doit fonctionner sur [`http://localhost:3000/`](http://localhost:3000/).
 
-Clone this repo. From the "back" folder of the project, run `npm install`. You 
-can then run the server with `node server`. 
-The server should run on `localhost` with default port `3000`. If the
-server runs on another port for any reason, this is printed to the
-console when the server starts, e.g. `Listening on port 3001`.
+## Auteur
+
+Florie PONS
+
+## Projet
+
+Formation Développeur Web d'Openclassrooms - Projet 5
